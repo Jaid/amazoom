@@ -1,10 +1,12 @@
-import EventEmitter from "events"
+import database from "lib/database"
 
 import "lib/startDate"
 
-class Core extends EventEmitter {
+class Core {
 
   async init() {
+    await database.authenticate()
+    await database.sync()
   }
 
 }

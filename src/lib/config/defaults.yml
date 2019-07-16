@@ -1,1 +1,4 @@
-example: 123
+databaseHost: localhost
+databasePort: 5432
+databaseName: amazoom
+databaseUser: postgres
