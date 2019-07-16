@@ -15,6 +15,7 @@ const configResult = essentialConfig(_PKG_TITLE, {
  * @prop {string} databaseUser
  * @prop {number} databasePort
  * @prop {string} databasePassword
+ * @prop {"sync"|"force"|"none"} databaseSchemaSync
  */
 
 /**
