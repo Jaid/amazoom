@@ -1,5 +1,6 @@
 import database from "lib/database"
 import config from "lib/config"
+import User from "src/models/User"
 
 import "lib/startDate"
 

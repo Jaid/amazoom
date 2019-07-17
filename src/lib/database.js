@@ -13,9 +13,9 @@ const sequelize = new Sequelize({
 
 const modelsRequire = require.context("../models/", true, /.js$/)
 for (const value of modelsRequire.keys()) {
-  const name = value.match(/\.\/(?<key>[\da-z]+)\./i).groups.key
-  const {modelOptions, default: schema} = modelsRequire(value)
-  sequelize.define(name, schema, modelOptions)
+  // const name = value.match(/\.\/(?<key>[\da-z]+)\./i).groups.key
+  const {schema, default: modelClass} = modelsRequire(value)
+  modelClass.init(schema, {sequelize})
 }
 
 export default sequelize
