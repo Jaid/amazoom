@@ -6,7 +6,7 @@
   "author": "Jaid <jaid.jsx@gmail.com> (https://github.com/Jaid)",
   "dependencies": {
     "@absolunet/fsp": "^1.6.1",
-    "@babel/runtime": "^7.5.4",
+    "@babel/runtime": "^7.5.5",
     "ensure-array": "^1.0.0",
     "essential-config": "^3.0.1",
     "express": "^4.17.1",
@@ -26,7 +26,7 @@
     "eslint-config-jaid": "^1.19.0",
     "jest": "^24.8.0",
     "rimraf": "^2.6.3",
-    "webpack": "^4.35.3",
+    "webpack": "^4.36.1",
     "webpack-config-jaid": "^5.22.0"
   },
   "scripts": {
