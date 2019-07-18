@@ -23,7 +23,7 @@
     "browserslist-config-jaid-node": "^2.2.1",
     "delay": "^4.3.0",
     "eslint": "^6.0.1",
-    "eslint-config-jaid": "^1.20.0",
+    "eslint-config-jaid": "^1.21.0",
     "jest": "^24.8.0",
     "rimraf": "^2.6.3",
     "webpack": "^4.36.1",
