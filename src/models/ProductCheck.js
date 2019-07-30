@@ -1,17 +1,17 @@
 import Sequelize from "sequelize"
 
-class User extends Sequelize.Model {}
+class ProductCheck extends Sequelize.Model {}
 
 export const schema = {
   title: {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  listPrice: Sequelize.INTEGER.UNSIGNED,
+  listPrice: Sequelize.INTEGER,
   price: {
-    type: Sequelize.INTEGER.UNSIGNED,
+    type: Sequelize.INTEGER,
     allowNull: false,
   },
 }
 
-export default User
+export default ProductCheck
