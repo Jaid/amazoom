@@ -7,6 +7,8 @@
   "dependencies": {
     "@absolunet/fsp": "^1.6.1",
     "@babel/runtime": "^7.5.5",
+    "cheerio": "^1.0.0-rc.3",
+    "cheerio-util": "^1.0.0",
     "ensure-array": "^1.0.0",
     "essential-config": "^3.0.1",
     "express": "^4.17.1",
@@ -23,7 +25,7 @@
     "browserslist-config-jaid-node": "^2.2.1",
     "delay": "^4.3.0",
     "eslint": "^6.0.1",
-    "eslint-config-jaid": "^1.21.0",
+    "eslint-config-jaid": "^1.23.0",
     "jest": "^24.8.0",
     "rimraf": "^2.6.3",
     "webpack": "^4.36.1",

@@ -1,7 +1,7 @@
 import database from "lib/database"
 import config from "lib/config"
-import User from "src/models/User"
-
+import Product from "src/models/Product"
+import amazon from "src/amazon"
 import "lib/startDate"
 
 class Core {
@@ -16,6 +16,7 @@ class Core {
         force: true,
       })
     }
+    await amazon.getPage("B071KGS72Q")
   }
 
 }
