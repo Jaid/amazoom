@@ -1,7 +1,5 @@
 import got from "got"
 import cheerio from "cheerio"
-import {first} from "lodash"
-import {filterByText} from "lib/cheerio"
 import cheerioUtil from "cheerio-util"
 
 class Amazon {
@@ -22,9 +20,7 @@ class Amazon {
       recognizeCDATA: true,
     })
     cheerioUtil(dom)
-    const listPriceTrNode = dom("tr").findByText("Unverb. Preisempf.:")
-    const listPriceValueNode = dom(listPriceTrNode).children("td").last()
-    const listPrice = listPriceValueNode.text()
+    const listPriceTrNode = dom("tr").findTrByFirstTd("Unverb. Preisempf.:")
     debugger
   }
 

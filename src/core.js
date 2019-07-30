@@ -3,18 +3,28 @@ import config from "lib/config"
 import Product from "src/models/Product"
 import amazon from "src/amazon"
 import "lib/startDate"
+import logger from "lib/logger"
 
 class Core {
 
   async init() {
-    await database.authenticate()
-    if (config.databaseSchemaSync === "sync") {
-      await database.sync()
-    }
-    if (config.databaseSchemaSync === "force") {
-      await database.sync({
-        force: true,
-      })
+    try {
+      await database.authenticate()
+      if (config.databaseSchemaSync === "sync") {
+        await database.sync()
+      }
+      if (config.databaseSchemaSync === "force") {
+        await database.sync({
+          force: true,
+        })
+      }
+      if (config.databaseSchemaSync === "alter") {
+        await database.sync({
+          alter: true,
+        })
+      }
+    } catch (error) {
+      logger.error("Error in initialization: %s", error)
     }
     await amazon.getPage("B071KGS72Q")
   }
