@@ -8,28 +8,28 @@
     "@absolunet/fsp": "^1.6.1",
     "@babel/runtime": "^7.5.5",
     "cheerio": "^1.0.0-rc.3",
-    "cheerio-util": "^1.0.0",
+    "cheerio-util": "^2.1.0",
     "ensure-array": "^1.0.0",
     "essential-config": "^3.0.1",
     "express": "^4.17.1",
     "got": "^9.6.0",
     "jaid-logger": "^1.4.1",
-    "lodash": "^4.17.14",
-    "pg": "^7.11.0",
-    "sequelize": "^5.10.1"
+    "lodash": "^4.17.15",
+    "pg": "^7.12.0",
+    "sequelize": "^5.12.1"
   },
   "devDependencies": {
-    "acorn": "^6.2.0",
+    "acorn": "^6.2.1",
     "babel-jest": "^24.8.0",
     "babel-preset-jaid": "^6.8.2",
     "browserslist-config-jaid-node": "^2.2.1",
     "delay": "^4.3.0",
-    "eslint": "^6.0.1",
-    "eslint-config-jaid": "^1.23.0",
+    "eslint": "^6.1.0",
+    "eslint-config-jaid": "^1.26.0",
     "jest": "^24.8.0",
     "rimraf": "^2.6.3",
-    "webpack": "^4.36.1",
-    "webpack-config-jaid": "^5.22.0"
+    "webpack": "^4.38.0",
+    "webpack-config-jaid": "^5.23.0"
   },
   "scripts": {
     "clean": "rimraf dist/",
