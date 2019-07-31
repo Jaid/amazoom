@@ -8,17 +8,12 @@ const amazonGot = got.extend({
 
 class ProductFetch extends Sequelize.Model {
 
-  static async request(asin) {
-    await response = 
-  }
-
-  static async get(asin) {
-    const productFetches = []
-    const request = () => async () => {
-      await amazonGot(`dp/${asin}`, {
-
-      })
-    }
+  /**
+   * @param {string} asin
+   * @return {Promise<import("got").Response>}
+   */
+  static async makeRequest(asin) {
+    return amazonGot(`dp/${asin}`)
   }
 
 }
