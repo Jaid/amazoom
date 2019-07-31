@@ -1,7 +1,6 @@
 import database from "lib/database"
 import config from "lib/config"
 import Product from "src/models/Product"
-import amazon from "src/amazon"
 import "lib/startDate"
 import logger from "lib/logger"
 
@@ -26,7 +25,7 @@ class Core {
     } catch (error) {
       logger.error("Error in initialization: %s", error)
     }
-    await amazon.getPage("B071KGS72Q")
+    await Product.add("B071KGS72Q")
   }
 
 }

@@ -15,6 +15,8 @@
     "got": "^9.6.0",
     "jaid-logger": "^1.4.1",
     "lodash": "^4.17.15",
+    "p-retry": "^4.1.0",
+    "parsecurrency": "^1.0.0",
     "pg": "^7.12.0",
     "sequelize": "^5.12.1"
   },
