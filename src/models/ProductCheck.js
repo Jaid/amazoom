@@ -1,44 +1,98 @@
 import Sequelize from "sequelize"
-import amazonGot from "lib/amazonGot"
 import cheerio from "cheerio-util"
 import parseCurrency from "parsecurrency"
-import core from "src/core"
-import asyncRetry from "async-retry"
+import {logger} from "src/core"
 import ProductFetch from "src/models/ProductFetch"
+import pRetry from "p-retry"
+import ms from "ms.macro"
+import hasContent from "has-content"
 
 class ProductCheck extends Sequelize.Model {
 
+  static associate(models) {
+    ProductCheck.belongsTo(models.Product, {
+      foreignKey: {
+        allowNull: false,
+      },
+    })
+    ProductCheck.hasMany(models.ProductFetch)
+  }
+
   /**
-   * @param {string} asin
+   * @param {Product} product
    * @return {Promise<ProductCheck>
    */
-  static async make(asin) {
-    await asyncRetry(async bail => {
-      const response = await ProductFetch.makeRequest(asin)
-      const hasCaptcha = response.body.contains("captcha")
-      if (hasCaptcha) {
-        bail(new Error(""))
-        return
+  static async make(product) {
+    try {
+      const productFetchIds = []
+      const productFetch = await pRetry(async () => {
+        const fetch = await ProductFetch.make(product.asin)
+        productFetchIds.push(fetch.id)
+        if (fetch.body.includes("api-services-support@amazon.com")) {
+          logger.warn("Got captcha page")
+          throw new Error("Has captcha")
+        }
+        return fetch
+      }, {
+        retries: 5,
+        maxTimeout: ms`1 minute`,
+      })
+      /**
+       * @type {import("cheerio")}
+       */
+      const dom = cheerio.load(productFetch.body, {
+        normalizeWhitespace: true,
+        lowerCaseTags: true,
+        lowerCaseAttributeNames: true,
+        recognizeSelfClosing: true,
+        recognizeCDATA: true,
+      })
+      const listPriceTr = dom.root().findTrByFirstTd("Unverb. Preisempf.:")
+      const productCheck = ProductCheck.build({
+        ProductId: product.id,
+      })
+      if (listPriceTr?.[0]) {
+        const listPriceText = listPriceTr[0]
+        const listPrice = parseCurrency(listPriceText)
+        if (listPrice) {
+          if (listPrice.symbol !== "€") {
+            logger.warn("Currency symbol for product #%s is \"%s\"", product.id, listPrice.symbol)
+          }
+          productCheck.listPrice = listPrice.value * 100
+          productCheck.listPriceSymbol = listPrice.symbol
+        } else {
+          logger.warn("Could not parse \"%s\" with parsecurrency", listPriceText)
+        }
       }
-      debugger
-    })
-    const result = await amazonGot(`dp/${asin}`)
-    const dom = cheerio.load(result.body, {
-      normalizeWhitespace: true,
-      lowerCaseTags: true,
-      lowerCaseAttributeNames: true,
-      recognizeSelfClosing: true,
-      recognizeCDATA: true,
-    })
-    const listPriceTr = dom.root().findTrByFirstTd("Unverb. Preisempf.:")
-    debugger
-    if (listPriceTr?.[0]) {
-      const listPrice = parseCurrency(listPriceTr[0])
-      if (listPrice.symbol !== "€") {
-        core.logger.warn("Currency symbol for product %s is \"%s\"", asin, listPrice.symbol)
+      const ourPriceNode = dom("#priceblock_ourprice")
+      if (ourPriceNode) {
+        const ourPriceText = ourPriceNode.textNormalized()
+        const price = parseCurrency(ourPriceText)
+        if (price) {
+          if (price.symbol !== "€") {
+            logger.warn("Currency symbol for product #%s is \"%s\"", product.id, price.symbol)
+          }
+          productCheck.price = price.value * 100
+          productCheck.priceSymbol = price.symbol
+        } else {
+          logger.warn("Could not parse \"%s\" with parsecurrency", ourPriceText)
+        }
       }
-      const cents = listPrice.value * 100
-      debugger
+      const title = dom("#productTitle").textNormalized()
+      if (title |> hasContent) {
+        productCheck.title = title
+      }
+      await productCheck.save()
+      await ProductFetch.update({
+        ProductCheckId: productCheck.id,
+      }, {
+        where: {
+          id: productFetchIds,
+        },
+      })
+      return productCheck
+    } catch (error) {
+      logger.error("Could not make product check for #%s: %s", product.id, error)
     }
   }
 
@@ -50,10 +104,9 @@ export const schema = {
     allowNull: false,
   },
   listPrice: Sequelize.INTEGER,
-  price: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-  },
+  listPriceSymbol: Sequelize.STRING,
+  price: Sequelize.INTEGER,
+  priceSymbol: Sequelize.STRING,
 }
 
 export default ProductCheck

@@ -1,29 +1,46 @@
 import Sequelize from "sequelize"
-import parseCurrency from "parsecurrency"
-import cheerioEnhanced from "cheerio-util"
-import amazonGot from "lib/amazonGot"
-import core from "src/core"
+import ProductCheck from "src/models/ProductCheck"
+import {logger} from "src/core"
 
 class Product extends Sequelize.Model {
 
-  /**
-   * @param {string} asin
-   * @return {Promise<Product>
-   */
-  static async getProductHtml(asin) {
-
+  static associate(models) {
+    Product.hasMany(models.ProductCheck, {
+      foreignKey: {
+        allowNull: false,
+      },
+    })
   }
 
-
   static async start() {
-    await Product.add("B071KGS72Q")
+    const [product] = await Product.findOrCreate({
+      where: {
+        asin: "B071KGS72Q",
+      },
+      defaults: {
+        title: "SanDisk Ultra 2D SSD 2 TB",
+      },
+    })
+    await product.check()
+  }
+
+  async check() {
+    const check = await ProductCheck.make(this)
+    debugger
   }
 
 }
 
 export const schema = {
-  asin: Sequelize.STRING(10), // See https://www.nchannel.com/blog/amazon-asin-what-is-an-asin-number
-  title: Sequelize.STRING,
+  asin: {
+    type: Sequelize.STRING(10), // See https://www.nchannel.com/blog/amazon-asin-what-is-an-asin-number
+    allowNull: false,
+    unique: true,
+  },
+  title: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
 }
 
 export default Product
