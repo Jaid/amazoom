@@ -20,7 +20,7 @@
     "p-retry": "^4.1.0",
     "parsecurrency": "^1.0.0",
     "pg": "^7.12.0",
-    "sequelize": "^5.12.1"
+    "sequelize": "^5.12.2"
   },
   "devDependencies": {
     "acorn": "^6.2.1",
