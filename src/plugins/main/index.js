@@ -1,11 +1,5 @@
 export default class Main {
 
-  /**
-   * @param {import("jaid-core").default} core
-   */
-  async init() {
-  }
-
   collectModels() {
     const models = {}
     const modelsRequire = require.context("../../models/", true, /.js$/)
