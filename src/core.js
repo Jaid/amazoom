@@ -6,6 +6,7 @@ const core = new JaidCore({
   insecurePort: 13333,
   database: "amazoom",
   gotLogLevel: "info",
+  useGot: true,
 })
 
 export const logger = core.logger
