@@ -14,7 +14,7 @@
     "express": "^4.17.1",
     "got": "^9.6.0",
     "has-content": "^1.1.0",
-    "jaid-core": "^2.0.2",
+    "jaid-core": "^3.0.0",
     "jaid-logger": "^1.4.2",
     "lodash": "^4.17.15",
     "p-retry": "^4.1.0",
@@ -22,12 +22,12 @@
     "pg": "^7.12.1",
     "pg-create-drop-db": "^1.0.1",
     "sequelize": "^5.13.1",
-    "user-agents": "^1.0.345"
+    "user-agents": "^1.0.346"
   },
   "devDependencies": {
     "acorn": "^6.2.1",
     "babel-jest": "^24.8.0",
-    "babel-preset-jaid": "^6.8.2",
+    "babel-preset-jaid": "^6.9.0",
     "browserslist-config-jaid-node": "^2.2.1",
     "delay": "^4.3.0",
     "eslint": "^6.1.0",
