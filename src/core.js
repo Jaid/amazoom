@@ -3,7 +3,7 @@ import JaidCore from "jaid-core"
 const core = new JaidCore({
   name: _PKG_TITLE,
   version: _PKG_VERSION,
-  insecurePort: 13333,
+  insecurePort: 17561,
   database: "amazoom",
   gotLogLevel: "info",
   useGot: true,
