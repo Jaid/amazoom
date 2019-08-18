@@ -6,6 +6,7 @@ import ProductFetch from "src/models/ProductFetch"
 import pRetry from "p-retry"
 import ms from "ms.macro"
 import hasContent from "has-content"
+import json5 from "json5"
 
 class ProductCheck extends Sequelize.Model {
 
@@ -82,6 +83,21 @@ class ProductCheck extends Sequelize.Model {
       if (title |> hasContent) {
         productCheck.title = title
       }
+      const scripts = dom("script[type='text/javascript']").toArray().map(node => {
+        return dom.text(node.childNodes).trim()
+      }).filter(hasContent)
+      const dataScript = scripts.find(script => /'twister-js-init-dpx-data'/s.test(script))
+      if (dataScript) {
+        const jsonString = /dataToReturn += +(?<object>{(.+)});/s.exec(dataScript).groups.object
+        productCheck.dataObject = json5.parse(jsonString)
+        debugger
+      }
+      const imagesScript = scripts.find(script => /'ImageBlockATF'.+jQuery\.parseJSON/s.test(script))
+      if (imagesScript) {
+        const jsonString = /parseJSON\('(?<json>.*?)'\);/s.exec(imagesScript).groups.json
+        productCheck.imagesObject = JSON.parse(jsonString)
+      }
+      debugger
       await productCheck.save()
       await ProductFetch.update({
         ProductCheckId: productCheck.id,
@@ -107,6 +123,8 @@ export const schema = {
   listPriceSymbol: Sequelize.STRING,
   price: Sequelize.INTEGER,
   priceSymbol: Sequelize.STRING,
+  imagesObject: Sequelize.JSONB,
+  dataObject: Sequelize.JSONB,
 }
 
 export default ProductCheck

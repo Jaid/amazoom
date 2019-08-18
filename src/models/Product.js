@@ -12,21 +12,15 @@ class Product extends Sequelize.Model {
     })
   }
 
-  static async start() {
-    const [product] = await Product.findOrCreate({
-      where: {
-        asin: "B071KGS72Q",
-      },
-      defaults: {
-        title: "SanDisk Ultra 2D SSD 2 TB",
-      },
+  static async findByAsin(asin, options) {
+    return Product.findOne({
+      where: {asin},
+      ...options,
     })
-    await product.check()
   }
 
   async check() {
     const check = await ProductCheck.make(this)
-    debugger
   }
 
 }

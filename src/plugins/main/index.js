@@ -1,4 +1,18 @@
+import Product from "src/models/Product"
+
 export default class Main {
+
+  async ready() {
+    // const [product] = await Product.findOrCreate({
+    //   where: {
+    //     asin: "B071KGS72Q",
+    //   },
+    //   defaults: {
+    //     title: "SanDisk Ultra 2D SSD 2 TB",
+    //   },
+    // })
+    // await product.check()
+  }
 
   collectModels() {
     const models = {}

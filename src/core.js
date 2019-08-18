@@ -6,10 +6,33 @@ const core = new JaidCore({
   insecurePort: 17561,
   database: "amazoom",
   gotLogLevel: "info",
+  databaseLogLevel: "info",
   useGot: true,
 })
 
+/**
+ * @type {import("jaid-logger").JaidLogger}
+ */
 export const logger = core.logger
+
+/**
+ * @type {import("got").GotInstance}
+ */
 export const got = core.got
+
+/**
+ * @type {import("jaid-core").BaseConfig & Config}
+ */
+export const config = core.config
+
+/**
+ * @type {string}
+ */
+export const appFolder = core.appFolder
+
+/**
+ * @type {import("koa")}
+ */
+export const koa = core.koa
 
 export default core
