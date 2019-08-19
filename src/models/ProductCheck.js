@@ -7,6 +7,7 @@ import pRetry from "p-retry"
 import ms from "ms.macro"
 import hasContent from "has-content"
 import json5 from "json5"
+import Product from "src/models/ProductFetch"
 
 class ProductCheck extends Sequelize.Model {
 
@@ -17,6 +18,28 @@ class ProductCheck extends Sequelize.Model {
       },
     })
     ProductCheck.hasMany(models.ProductFetch)
+  }
+
+  /**
+   * @param {string} asin
+   * @param {import("sequelize").FindOptions} sequelizeOptions
+   * @return {Promise<ProductCheck>}
+   */
+  static async getLatestByAsin(asin, sequelizeOptions) {
+    const {id} = await Product.findOne({asin}, {
+      attributes: ["id"],
+      raw: true,
+    })
+    if (!id) {
+      return
+    }
+    return ProductCheck.findOne({
+      where: {
+        ProductId: id,
+      },
+      order: [["createdAt", "DESC"]],
+      ...sequelizeOptions,
+    })
   }
 
   /**

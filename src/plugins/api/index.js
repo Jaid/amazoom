@@ -14,17 +14,20 @@ export default class Main {
           context.assert(productFetch, 404, "ID not found")
           context.body = productFetch.body
         },
-        "/previewProduct/:asin": async context => {
-          const product = await Product.findByAsin(context.params.asin, {
-            attributes: ["id"],
-            include: [
-              {
-                model: ProductCheck,
+        "/asin/:asin": {
+          "/preview": async context => {
+            const productCheck = await ProductCheck.getLatestByAsin(context.params.asin)
+            context.assert(productCheck, 404, "No ProductCheck not found")
+            const latestFetch = await ProductFetch.findOne({
+              where: {
+                ProductCheckId: productCheck.id,
               },
-            ],
-          })
-          context.assert(product, 404, "ASIN not found")
-          context.body = productFetch.body
+              order: [["createdAt", "DESC"]],
+              attributes: ["body"],
+              raw: true,
+            })
+            context.body = latestFetch.body
+          },
         },
       },
     }

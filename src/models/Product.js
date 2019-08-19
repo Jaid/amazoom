@@ -19,6 +19,19 @@ class Product extends Sequelize.Model {
     })
   }
 
+  /**
+   * @param {import("sequelize").FindOptions} options
+   * @return {Promise<ProductCheck>}
+   */
+  async getLatestCheck(options) {
+    return ProductCheck.findOne({
+      where: {
+        ProductId: this.id,
+      },
+      ...options,
+    })
+  }
+
   async check() {
     const check = await ProductCheck.make(this)
   }
