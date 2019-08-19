@@ -1,6 +1,7 @@
 import Sequelize from "sequelize"
 import {logger, got} from "src/core"
 import UserAgent from "user-agents"
+import minifyAmazonHtml from "lib/minifyAmazonHtml"
 
 const userAgentRoller = new UserAgent({deviceCategory: "tablet"})
 
@@ -30,7 +31,7 @@ class ProductFetch extends Sequelize.Model {
       const productFetch = await ProductFetch.create({
         url: response.requestUrl,
         userAgent: response.request.gotOptions.headers["user-agent"],
-        body: response.body,
+        body: minifyAmazonHtml(response.body),
         httpVersion: response.httpVersion,
         method: response.request.gotOptions.method,
         statusCode: response.statusCode,
