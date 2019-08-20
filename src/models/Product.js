@@ -12,10 +12,15 @@ class Product extends Sequelize.Model {
     })
   }
 
-  static async findByAsin(asin, options) {
+  /**
+   * @param {string} asin
+   * @param {import("sequelize").FindOptions} sequelizeOptions
+   * @return {Promise<Product>}
+   */
+  static async findByAsin(asin, sequelizeOptions) {
     return Product.findOne({
       where: {asin},
-      ...options,
+      ...sequelizeOptions,
     })
   }
 
