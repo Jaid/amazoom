@@ -12,6 +12,7 @@ export default class Main {
         "/previewFetch/:id": this.handlePreviewFetch,
         "/asin/:asin": {
           "/preview": this.handleAsinPreview,
+          "/previewAny": this.handleAsinPreviewAny,
         },
       },
       post: {
@@ -80,6 +81,25 @@ export default class Main {
       raw: true,
     })
     context.body = latestFetch.body
+  }
+
+  /**
+   * @param {import("koa").Context} context
+   * @return {Promise<void>}
+   */
+  async handleAsinPreviewAny(context) {
+    const {asin} = context.params
+    const product = await Product.findByAsin(asin)
+    context.assert(product, 404, "ASIN not found")
+    const {body} = await ProductFetch.findOne({
+      where: {
+        ProductId: product.id,
+      },
+      order: [["createdAt", "DESC"]],
+      attributes: ["body"],
+      raw: true,
+    })
+    context.body = body
   }
 
 }

@@ -1,4 +1,7 @@
 import Product from "src/models/Product"
+import {logger} from "src/core"
+import intervalPromise from "interval-promise"
+import ms from "ms.macro"
 
 export default class Main {
 
@@ -12,6 +15,14 @@ export default class Main {
     //   },
     // })
     // await product.check()
+    intervalPromise(this.job, ms`10 seconds`)
+  }
+
+  async job() {
+    const products = await Product.findAll()
+    for (const product of products) {
+      await product.check()
+    }
   }
 
   collectModels() {

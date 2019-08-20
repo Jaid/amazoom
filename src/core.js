@@ -5,9 +5,8 @@ const core = new JaidCore({
   version: _PKG_VERSION,
   insecurePort: 17561,
   database: "amazoom",
-  gotLogLevel: "info",
-  databaseLogLevel: "info",
   useGot: true,
+  databaseExtensions: "hstore",
 })
 
 /**

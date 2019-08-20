@@ -1,7 +1,6 @@
 import Sequelize from "sequelize"
 import {logger, got} from "src/core"
 import UserAgent from "user-agents"
-import minifyAmazonHtml from "lib/minifyAmazonHtml"
 
 const userAgentRoller = new UserAgent({deviceCategory: "tablet"})
 
@@ -13,15 +12,19 @@ class ProductFetch extends Sequelize.Model {
 
   static associate(models) {
     ProductFetch.belongsTo(models.ProductCheck)
+    ProductFetch.belongsTo(models.Product, {
+      foreignKey: {
+        allowNull: false,
+      },
+    })
   }
 
   /**
-   * @param {string} asin
+   * @param {Product} product
    * @return {Promise<ProductFetch>}
    */
-  static async make(asin) {
+  static async make({asin, id}) {
     try {
-      logger.info("Request %s", asin)
       const userAgent = userAgentRoller.random().toString()
       const response = await amazonGot(`dp/${asin}`, {
         headers: {
@@ -29,9 +32,10 @@ class ProductFetch extends Sequelize.Model {
         },
       })
       const productFetch = await ProductFetch.create({
+        ProductId: id,
         url: response.requestUrl,
         userAgent: response.request.gotOptions.headers["user-agent"],
-        body: minifyAmazonHtml(response.body),
+        body: response.body,
         httpVersion: response.httpVersion,
         method: response.request.gotOptions.method,
         statusCode: response.statusCode,
@@ -46,13 +50,20 @@ class ProductFetch extends Sequelize.Model {
 
 }
 
+/**
+ * @type {import("sequelize").ModelAttributes}
+ */
 export const schema = {
   url: {
     type: Sequelize.TEXT,
     allowNull: false,
   },
-  userAgent: {
-    type: Sequelize.STRING,
+  requestHeaders: {
+    type: Sequelize.HSTORE,
+    allowNull: false,
+  },
+  responseHeaders: {
+    type: Sequelize.HSTORE,
     allowNull: false,
   },
   body: {

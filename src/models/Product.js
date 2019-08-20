@@ -10,6 +10,16 @@ class Product extends Sequelize.Model {
         allowNull: false,
       },
     })
+    Product.hasMany(models.ProductFetch, {
+      foreignKey: {
+        allowNull: false,
+      },
+    }),
+    Product.hasMany(models.ProductState, {
+      foreignKey: {
+        allowNull: false,
+      },
+    })
   }
 
   /**
@@ -43,6 +53,9 @@ class Product extends Sequelize.Model {
 
 }
 
+/**
+ * @type {import("sequelize").ModelAttributes}
+ */
 export const schema = {
   asin: {
     type: Sequelize.STRING(10), // See https://www.nchannel.com/blog/amazon-asin-what-is-an-asin-number

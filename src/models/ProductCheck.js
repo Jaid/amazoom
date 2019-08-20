@@ -50,7 +50,7 @@ class ProductCheck extends Sequelize.Model {
     try {
       const productFetchIds = []
       const productFetch = await pRetry(async () => {
-        const fetch = await ProductFetch.make(product.asin)
+        const fetch = await ProductFetch.make(product)
         productFetchIds.push(fetch.id)
         if (fetch.body.includes("api-services-support@amazon.com")) {
           logger.warn("Got captcha page")
@@ -113,14 +113,12 @@ class ProductCheck extends Sequelize.Model {
       if (dataScript) {
         const jsonString = /dataToReturn += +(?<object>{(.+)});/s.exec(dataScript).groups.object
         productCheck.dataObject = json5.parse(jsonString)
-        debugger
       }
       const imagesScript = scripts.find(script => /'ImageBlockATF'.+jQuery\.parseJSON/s.test(script))
       if (imagesScript) {
         const jsonString = /parseJSON\('(?<json>.*?)'\);/s.exec(imagesScript).groups.json
         productCheck.imagesObject = JSON.parse(jsonString)
       }
-      debugger
       await productCheck.save()
       await ProductFetch.update({
         ProductCheckId: productCheck.id,
@@ -137,17 +135,14 @@ class ProductCheck extends Sequelize.Model {
 
 }
 
+/**
+ * @type {import("sequelize").ModelAttributes}
+ */
 export const schema = {
-  title: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  listPrice: Sequelize.INTEGER,
-  listPriceSymbol: Sequelize.STRING,
-  price: Sequelize.INTEGER,
+  /* price: Sequelize.INTEGER,
   priceSymbol: Sequelize.STRING,
   imagesObject: Sequelize.JSONB,
-  dataObject: Sequelize.JSONB,
+  dataObject: Sequelize.JSONB, */
 }
 
 export default ProductCheck
