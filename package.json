@@ -19,14 +19,14 @@
     "jaid-core": "^4.3.2",
     "jaid-logger": "^1.4.2",
     "json5": "^2.1.0",
-    "koa": "^2.7.0",
+    "koa": "^2.8.1",
     "lodash": "^4.17.15",
     "p-retry": "^4.1.0",
     "parsecurrency": "^1.0.0",
     "pg": "^7.12.1",
     "pg-create-drop-db": "^1.0.1",
     "sequelize": "^5.15.1",
-    "user-agents": "^1.0.352"
+    "user-agents": "^1.0.353"
   },
   "devDependencies": {
     "acorn": "^7.0.0",
@@ -39,7 +39,7 @@
     "jest": "^24.9.0",
     "rimraf": "^3.0.0",
     "webpack": "^4.39.2",
-    "webpack-config-jaid": "^5.27.1"
+    "webpack-config-jaid": "^5.27.2"
   },
   "scripts": {
     "clean": "rimraf dist/",
