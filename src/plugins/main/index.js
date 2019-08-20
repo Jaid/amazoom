@@ -6,16 +6,7 @@ import ms from "ms.macro"
 export default class Main {
 
   async ready() {
-    // const [product] = await Product.findOrCreate({
-    //   where: {
-    //     asin: "B071KGS72Q",
-    //   },
-    //   defaults: {
-    //     title: "SanDisk Ultra 2D SSD 2 TB",
-    //   },
-    // })
-    // await product.check()
-    intervalPromise(this.job, ms`10 seconds`)
+    intervalPromise(this.job, ms`1 minute`)
   }
 
   async job() {
