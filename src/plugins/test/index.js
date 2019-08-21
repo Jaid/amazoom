@@ -1,5 +1,6 @@
-import {got} from "src/core"
-import Product from "src/models/Product"
+import {got, config, logger} from "src/core"
+
+const asin = "B07MLJD32L"
 
 export default class Test {
 
@@ -7,19 +8,28 @@ export default class Test {
     return process.env.VSCODE_CLI === "1"
   }
 
+  async init() {
+    this.got = got.extend({
+      baseUrl: "http://localhost",
+      port: config.insecurePort,
+    })
+  }
+
   async ready() {
-    await got.post("http://localhost:17561/registerAsin", {
+    await this.got.post("registerAsin", {
       query: {
-        asin: "B07MLJD32L",
+        asin,
         title: "2TB NVMe m.2 Festplatte",
       },
     })
-    const products = await Product.findAll()
-    for (const product of products) {
-      await product.check()
-    }
-
-    await got.get("http://localhost:17561/product/1/amazon/preview")
+    const {body: info} = await this.got(`info/identifier/amazon/${asin}`, {
+      json: true,
+    })
+    await this.got.post(`triggerCheck/product/${info.id}`)
+    const {body: infoAfterCheck} = await this.got(`info/identifier/amazon/${asin}`, {
+      json: true,
+    })
+    logger.info("Price: %s %s", Number(infoAfterCheck.price) / 100, infoAfterCheck.currency)
   }
 
 }

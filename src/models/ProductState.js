@@ -44,6 +44,22 @@ class ProductState extends Sequelize.Model {
     })
   }
 
+  /**
+   * @param {string} platform
+   * @param {number} productId
+   * @param {import("sequelize").FindOptions} sequelizeOptions
+   * @return {Promise<ProductState>}
+   */
+  static async findByProductId(platform, productId, sequelizeOptions) {
+    return ProductState.findOne({
+      where: {
+        platform,
+        ProductId: productId,
+      },
+      ...sequelizeOptions,
+    })
+  }
+
   getPlatform() {
     return require(`../platforms/${this.platform}/index.js`).default
   }

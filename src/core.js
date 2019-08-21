@@ -10,6 +10,10 @@ const core = new JaidCore({
 })
 
 /**
+ * @typedef {Object} Config
+ */
+
+/**
  * @type {import("jaid-logger").JaidLogger}
  */
 export const logger = core.logger
