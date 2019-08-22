@@ -1,5 +1,7 @@
 import JaidCore from "jaid-core"
 
+import defaults from "./defaults.yml"
+
 const core = new JaidCore({
   name: _PKG_TITLE,
   version: _PKG_VERSION,
@@ -7,6 +9,13 @@ const core = new JaidCore({
   database: "amazoom",
   useGot: true,
   databaseExtensions: "hstore",
+  configSetup: {
+    defaults,
+    secretKeys: [
+      "twitchClientId",
+      "twitchClientSecret",
+    ],
+  },
 })
 
 /**
