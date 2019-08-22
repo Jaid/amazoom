@@ -28,6 +28,8 @@
     "pg-create-drop-db": "^1.0.1",
     "pg-hstore": "^2.3.3",
     "sequelize": "^5.15.2",
+    "socket-enhance": "^1.0.1",
+    "socket.io": "^2.2.0",
     "user-agents": "^1.0.355"
   },
   "devDependencies": {
