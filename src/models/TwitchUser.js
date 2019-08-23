@@ -7,15 +7,6 @@ import scope from "src/plugins/twitchAuth/scope"
 class TwitchUser extends Sequelize.Model {
 
   static associate(models) {
-    TwitchUser.hasMany(models.ChatMessage, {
-      foreignKey: {
-        allowNull: false,
-      },
-    })
-    TwitchUser.hasMany(models.Video, {
-      as: "RequestedVideos",
-      foreignKey: "RequesterId",
-    })
   }
 
   static async getByTwitchId(twitchId) {
