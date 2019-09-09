@@ -1,9 +1,9 @@
 import {Strategy as TwitchStrategy} from "passport-twitch-new"
-import core, {config, logger} from "src/core"
-import TwitchUser from "src/models/TwitchUser"
+import {koa, config, logger} from "src/core"
 import passport from "koa-passport"
-import Router from "@koa/router"
+import {router} from "fast-koa-router"
 
+import TwitchUser from "./models/TwitchUser"
 import scope from "./scope"
 
 import indexContent from "!raw-loader!./index.html"
@@ -11,7 +11,7 @@ import indexContent from "!raw-loader!./index.html"
 class TwitchAuth {
 
   async init() {
-    passport.use(new TwitchStrategy({
+    this.passport = passport.use(new TwitchStrategy({
       scope,
       clientID: config.twitchClientId,
       clientSecret: config.twitchClientSecret,
@@ -32,17 +32,36 @@ class TwitchAuth {
       logger.info("Login from Twitch user %s", profile.login)
       done()
     }))
-    core.koa.use(passport.initialize())
-    this.router = new Router()
-    this.router.get("/auth/twitch", context => {
-      context.type = "html"
-      context.body = indexContent
+    this.koa = koa
+    this.middleware = router({
+      get: {
+        "/auth": context => {
+          context.type = "html"
+          context.body = indexContent
+        },
+        "/auth/twitch": this.passport.authenticate("twitch"),
+        "/auth/twitch/callback": this.passport.authenticate("twitch", {
+          failureRedirect: "/auth",
+          successRedirect: "/auth/twitch/done",
+        }),
+        "/auth/twitch/done": this.handleAuthDone,
+      },
     })
-    this.router.get("/auth/twitch", passport.authenticate("twitch"))
-    this.router.get("/auth/twitch/callback", passport.authenticate("twitch", {failureRedirect: "/"}), context => {
-      context.body = "OK"
-    })
-    core.koa.use(this.router.routes())
+  }
+
+  async ready() {
+    this.koa.use(this.passport.initialize())
+    this.koa.use(this.middleware)
+  }
+
+  handleAuthDone(context) {
+    context.body = {status: "ok"}
+  }
+
+  collectModels() {
+    return {
+      TwitchUser: require("./models/TwitchUser"),
+    }
   }
 
 }
