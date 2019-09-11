@@ -1,31 +1,30 @@
-import core, {logger, config} from "src/core"
 import socketEnhancer from "lib/socketEnhancer"
 import socketIo from "socket.io"
-import ProductState from "src/models/ProductState"
-import Product from "src/models/Product"
+import core from "src/core"
+import {last} from "lodash"
+
+const commandsRequire = require.context("./commands/", false)
 
 class SocketApi {
 
   async init() {
     this.socketServer = socketIo(core.insecureServer)
-    this.socketServer.on("connection", async client => {
-      client.on("getOverview", async callback => {
-        const productStates = await ProductState.findAll({
-          order: [["updatedAt", "desc"]],
-          raw: true,
-          attributes: ["platform", "price", "platformIdentifier", "currency"],
-          include: [
-            {
-              model: Product,
-              attributes: ["title"],
-              required: true,
-            },
-          ],
+    this.socketServer.on("connection", client => {
+      for (const [commandName, command] of Object.entries(this.commands)) {
+        client.on(commandName, async (...args) => {
+          const result = await command(client, ...args)
+          if (result !== undefined) {
+            last(args)(result)
+          }
         })
-        callback(productStates)
-      })
+      }
     })
     socketEnhancer.enhanceServer(this.socketServer)
+    this.commands = commandsRequire.keys().reduce((state, value) => {
+      const commandName = value.match(/\.\/(?<key>[\da-z]+)/i).groups.key
+      state[commandName] = commandsRequire(value).default
+      return state
+    }, {})
   }
 
 }
