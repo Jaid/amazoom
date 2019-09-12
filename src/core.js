@@ -9,6 +9,7 @@ const core = new JaidCore({
   database: "amazoom",
   useGot: true,
   databaseExtensions: "hstore",
+  koaSession: {key: "abc"},
   configSetup: {
     defaults,
     secretKeys: [

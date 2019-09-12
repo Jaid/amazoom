@@ -17,7 +17,7 @@ class TwitchAuth {
       clientSecret: config.twitchClientSecret,
       callbackURL: config.twitchClientCallbackUrl,
     }, async (accessToken, refreshToken, profile, done) => {
-      await TwitchUser.upsert({
+      const [twitchUser] = await TwitchUser.upsert({
         accessToken,
         refreshToken,
         broadcasterType: profile.broadcaster_type,
@@ -28,10 +28,27 @@ class TwitchAuth {
         offlineImageUrl: profile.offline_image_url,
         avatarUrl: profile.profile_image_url,
         viewCount: profile.view_count,
+      }, {
+        returning: true,
       })
       logger.info("Login from Twitch user %s", profile.login)
-      return done(null, profile)
+      return done(null, twitchUser)
     }))
+    this.passport.serializeUser((twitchUser, done) => {
+      return done(null, twitchUser.twitchId)
+    })
+    this.passport.deserializeUser(async (twitchId, done) => {
+      debugger
+      try {
+        const twitchUser = await TwitchUser.findOne({twitchId})
+        if (!twitchId) {
+          return done(new Error(`No user found with Twitch ID ${twitchId}`))
+        }
+        return done(null, twitchUser)
+      } catch (error) {
+        return done(error)
+      }
+    })
     this.koa = koa
     this.middleware = router({
       get: {
@@ -43,7 +60,6 @@ class TwitchAuth {
         "/auth/twitch/callback": this.passport.authenticate("twitch", {
           failureRedirect: "/auth",
           successRedirect: "/auth/twitch/done",
-          session: false,
         }),
         "/auth/twitch/done": this.handleAuthDone,
       },
@@ -52,10 +68,11 @@ class TwitchAuth {
 
   async ready() {
     this.koa.use(this.passport.initialize())
+    this.koa.use(this.passport.session())
     this.koa.use(this.middleware)
   }
 
-  handleAuthDone(context) {
+  async handleAuthDone(context) {
     context.redirect(config.loginRedirectUrl)
   }
 
