@@ -42,7 +42,7 @@ class TwitchAuth {
         "/auth/twitch": this.passport.authenticate("twitch"),
         "/auth/twitch/callback": this.passport.authenticate("twitch", {
           failureRedirect: "/auth",
-          successRedirect: "/auth/twitch/done",
+          successRedirect: `https://${config.frontendHost}`,
         }),
         "/auth/twitch/done": this.handleAuthDone,
       },
@@ -52,10 +52,6 @@ class TwitchAuth {
   async ready() {
     this.koa.use(this.passport.initialize())
     this.koa.use(this.middleware)
-  }
-
-  handleAuthDone(context) {
-    context.body = {status: "ok"}
   }
 
   collectModels() {
