@@ -1,2 +1,3 @@
 twitchClientCallbackUrl: https://amazoom.jaid.codes/auth/twitch/callback
+loginRedirectUrl: https://preis.farm
 frontendHost: preis.farm

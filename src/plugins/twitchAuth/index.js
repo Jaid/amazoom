@@ -30,7 +30,7 @@ class TwitchAuth {
         viewCount: profile.view_count,
       })
       logger.info("Login from Twitch user %s", profile.login)
-      done()
+      return done(null, profile)
     }))
     this.koa = koa
     this.middleware = router({
@@ -42,7 +42,8 @@ class TwitchAuth {
         "/auth/twitch": this.passport.authenticate("twitch"),
         "/auth/twitch/callback": this.passport.authenticate("twitch", {
           failureRedirect: "/auth",
-          successRedirect: `https://${config.frontendHost}`,
+          successRedirect: "/auth/twitch/done",
+          session: false,
         }),
         "/auth/twitch/done": this.handleAuthDone,
       },
@@ -52,6 +53,10 @@ class TwitchAuth {
   async ready() {
     this.koa.use(this.passport.initialize())
     this.koa.use(this.middleware)
+  }
+
+  handleAuthDone(context) {
+    context.redirect(config.loginRedirectUrl)
   }
 
   collectModels() {

@@ -20,6 +20,8 @@ const core = new JaidCore({
 
 /**
  * @typedef {Object} Config
+ * @prop {string} frontendHost
+ * @prop {string} loginRedirectUrl
  */
 
 /**
