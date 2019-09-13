@@ -23,6 +23,9 @@ const core = new JaidCore({
  * @typedef {Object} Config
  * @prop {string} frontendHost
  * @prop {string} loginRedirectUrl
+ * @prop {string} twitchClientCallbackUrl
+ * @prop {string} twitchClientId
+ * @prop {string} twitchClientSecret
  */
 
 /**

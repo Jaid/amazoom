@@ -3,40 +3,14 @@ import twitch from "twitch"
 import {config, logger} from "src/core"
 import scope from "src/plugins/twitchAuth/scope"
 
-class TwitchUser extends Sequelize.Model {
+class TwitchToken extends Sequelize.Model {
 
   static associate(models) {
-    TwitchUser.hasMany(models.TwitchToken, {
+    TwitchToken.belongsTo(models.TwitchUser, {
       foreignKey: {
         allowNull: false,
       },
     })
-    TwitchUser.hasMany(models.ApiKey, {
-      foreignKey: {
-        allowNull: false,
-      },
-    })
-  }
-
-  static async getByTwitchId(twitchId) {
-    const user = await TwitchUser.findOne({
-      where: {twitchId},
-    })
-    return user
-  }
-
-  /**
-   * @async
-   * @param {string} twitchLogin
-   * @return {TwitchUser}
-   */
-  static async getByTwitchLogin(twitchLogin) {
-    const user = await TwitchUser.findOne({
-      where: {
-        loginName: twitchLogin.toLowerCase(),
-      },
-    })
-    return user
   }
 
   async toTwitchClient() {
@@ -72,30 +46,18 @@ class TwitchUser extends Sequelize.Model {
     })
   }
 
-  getDisplayName() {
-    return this.displayName || this.loginName || `#${this.twitchId}`
-  }
-
 }
 
 /**
  * @type {import("sequelize").ModelAttributes}
  */
 export const schema = {
-  twitchId: {
-    type: Sequelize.STRING(16),
-    unique: true,
+  accessToken: {
     allowNull: false,
+    type: Sequelize.STRING(30),
   },
-  loginName: {
-    allowNull: false,
-    type: Sequelize.STRING(25), // 25 based on https://discuss.dev.twitch.tv/t/max-length-for-user-names-and-display-names/21315/2
-  },
-  displayName: Sequelize.STRING(25), // 25 based on https://discuss.dev.twitch.tv/t/max-length-for-user-names-and-display-names/21315/2
-  avatarUrl: Sequelize.TEXT,
-  // followDate: Sequelize.DATE,
-  // subscribedUntil: Sequelize.DATE,
-  twitchProfile: Sequelize.JSONB, // viewCount, avatarUrl, offlineImageUrl, description, broadcasterType
+  refreshToken: Sequelize.STRING(50),
+  expiry: Sequelize.DATE,
 }
 
-export default TwitchUser
+export default TwitchToken
