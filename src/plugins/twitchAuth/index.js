@@ -1,9 +1,6 @@
 import url from "url"
 
-import {Strategy as TwitchStrategy} from "passport-twitch-new"
-import {koa, config, logger} from "src/core"
-import passport from "koa-passport"
-import {router} from "fast-koa-router"
+import {config, logger} from "src/core"
 import twitch from "twitch"
 
 import TwitchUser from "./models/TwitchUser"
@@ -11,51 +8,10 @@ import scope from "./scope"
 import TwitchToken from "./models/TwitchToken"
 import ApiKey from "./models/ApiKey"
 
-import indexContent from "!raw-loader!./index.html"
-
 class TwitchAuth {
 
   async init() {
-    // this.twitchStrategy = new TwitchStrategy({
-    //   scope,
-    //   clientID: config.twitchClientId,
-    //   clientSecret: config.twitchClientSecret,
-    //   callbackURL: config.twitchClientCallbackUrl,
-    // }, async (accessToken, refreshToken, profile, done) => {
-    //   const [twitchUser] = await TwitchUser.upsert({
-    //     accessToken,
-    //     refreshToken,
-    //     broadcasterType: profile.broadcaster_type,
-    //     description: profile.description,
-    //     displayName: profile.display_name,
-    //     twitchId: profile.id,
-    //     loginName: profile.login,
-    //     offlineImageUrl: profile.offline_image_url,
-    //     avatarUrl: profile.profile_image_url,
-    //     viewCount: profile.view_count,
-    //   }, {
-    //     returning: true,
-    //   })
-    //   logger.info("Login from Twitch user %s", profile.login)
-    //   return done(null, twitchUser)
-    // })
-    // this.passport = passport.use(this.twitchStrategy)
-    // this.koa = koa
-    // this.middleware = router({
-    //   get: {
-    //     "/auth": context => {
-    //       context.type = "html"
-    //       context.body = indexContent
-    //     },
-    //     "/auth/twitch": this.passport.authorize("twitch"),
-    //   },
-    // })
     this.twitchClient = twitch.withClientCredentials(config.twitchClientId, config.twitchClientSecret)
-  }
-
-  async ready() {
-    // this.koa.use(this.passport.initialize())
-    // this.koa.use(this.middleware)
   }
 
   collectModels() {
@@ -106,26 +62,10 @@ class TwitchAuth {
     twitchUser.displayName = twitchProfile.displayName
     twitchUser.avatarUrl = twitchProfile.profilePictureUrl
     await twitchUser.save()
-    // const [twitchUser] = await TwitchUser.upsert({
-    //   accessToken,
-    //   refreshToken,
-    //   broadcasterType: profile.broadcaster_type,
-    //   description: profile.description,
-    //   displayName: profile.display_name,
-    //   twitchId: profile.id,
-    //   loginName: profile.login,
-    //   offlineImageUrl: profile.offline_image_url,
-    //   avatarUrl: profile.profile_image_url,
-    //   viewCount: profile.view_count,
-    // }, {
-    //   returning: true,
-    // })
-    // logger.info("Login from Twitch user %s", profile.login)
     const [apiKey] = await ApiKey.findOrCreate({
       where: {
         TwitchUserId: twitchUser.id,
       },
-      // TwitchUserId: twitchUser.id,
     })
     return {
       apiKey,
