@@ -2,8 +2,11 @@ import Sequelize from "sequelize"
 import twitch from "twitch"
 import {config, logger} from "src/core"
 import scope from "src/plugins/twitchAuth/scope"
+import ms from "ms.macro"
 
 class TwitchToken extends Sequelize.Model {
+
+  static expiryTolerance = ms`10 minutes`
 
   static associate(models) {
     TwitchToken.belongsTo(models.TwitchUser, {
@@ -44,6 +47,13 @@ class TwitchToken extends Sequelize.Model {
     await this.save({
       fields: ["accessToken", "refreshToken", "tokenExpiryDate"],
     })
+  }
+
+  isExpired() {
+    if (!this.expiry) {
+      return false
+    }
+    return Date.now() > this.expiry.getTime() - TwitchToken.expiryTolerance
   }
 
 }

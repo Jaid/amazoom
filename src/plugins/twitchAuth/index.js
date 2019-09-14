@@ -52,12 +52,24 @@ class TwitchAuth {
         loginName: tokenInfo.userName,
       })
     }
-    const twitchToken = await TwitchToken.create({
-      accessToken,
-      refreshToken,
-      tokenExpiryDate: tokenInfo.expiryDate,
-      TwitchUserId: twitchUser.id,
+    const [twitchToken] = await TwitchToken.findOrCreate({
+      where: {
+        TwitchUserId: twitchUser.id,
+      },
+      defaults: {
+        accessToken,
+        refreshToken,
+        expiry: tokenInfo.expiryDate,
+      },
     })
+    if (twitchToken.isExpired() && twitchToken.refreshToken) {
+      const newToken = await twitch.refreshAccessToken(config.twitchClientId, config.twitchClientSecret, twitchToken.refreshToken)
+      await twitchToken.update({
+        accessToken: newToken.accessToken,
+        refreshToken: newToken.refreshToken,
+        expiry: newToken.expiryDate,
+      })
+    }
     const twitchProfile = await this.twitchClient.helix.users.getUserById(twitchUser.twitchId)
     twitchUser.displayName = twitchProfile.displayName
     twitchUser.avatarUrl = twitchProfile.profilePictureUrl
