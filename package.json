@@ -35,7 +35,7 @@
     "socket-enhance": "^1.1.1",
     "socket.io": "^2.2.0",
     "twitch": "^3.4.4",
-    "user-agents": "^1.0.377"
+    "user-agents": "^1.0.379"
   },
   "devDependencies": {
     "acorn": "^7.0.0",
@@ -43,11 +43,11 @@
     "babel-preset-jaid": "^6.10.0",
     "browserslist-config-jaid-node": "^2.2.2",
     "delay": "^4.3.0",
-    "eslint": "^6.3.0",
+    "eslint": "^6.4.0",
     "eslint-config-jaid": "^1.30.0",
     "jest": "^24.9.0",
     "rimraf": "^3.0.0",
-    "webpack": "^4.40.0",
+    "webpack": "^4.40.2",
     "webpack-config-jaid": "^5.27.9"
   },
   "scripts": {
