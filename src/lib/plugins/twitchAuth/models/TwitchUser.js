@@ -1,7 +1,5 @@
 import Sequelize from "sequelize"
-import twitch from "twitch"
-import {config, logger} from "src/core"
-import scope from "src/plugins/twitchAuth/scope"
+import {logger} from "src/core"
 
 class TwitchUser extends Sequelize.Model {
 
@@ -37,24 +35,6 @@ class TwitchUser extends Sequelize.Model {
       },
     })
     return user
-  }
-
-  async toTwitchClient() {
-    const client = await twitch.withCredentials(config.twitchClientId, this.accessToken, scope, {
-      clientSecret: config.twitchClientSecret,
-      refreshToken: this.refreshToken,
-      onRefresh: accessToken => this.updateToken(accessToken),
-      expiry: this.tokenExpiryDate,
-    }, {
-      preAuth: true,
-      initialScopes: scope,
-    })
-    if (!this.tokenExpiryDate) {
-      logger.info("Initial expiry date not set for user %s. Forcing access token refresh.", this.loginName)
-      await client.refreshAccessToken()
-    }
-    logger.info("Created client for user %s", this.loginName)
-    return client
   }
 
   /**

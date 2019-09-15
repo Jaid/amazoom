@@ -3,6 +3,7 @@ import url from "url"
 import {config, logger} from "src/core"
 import twitch from "twitch"
 import ensureArray from "ensure-array"
+import {isEmpty} from "has-content"
 
 import TwitchUser from "./models/TwitchUser"
 import TwitchToken from "./models/TwitchToken"
@@ -18,19 +19,27 @@ class TwitchAuth {
     this.options.scope = ensureArray(this.options.scope)
   }
 
-  async init(core) {
-    debugger
-    this.twitchClient = twitch.withClientCredentials(config.twitchClientId, config.twitchClientSecret)
+  async setCoreReference(core) {
+    this.core = core
   }
 
-  collectModels() {
-    const models = {}
-    const modelsRequire = require.context("./models/", true, /.js$/)
-    for (const value of modelsRequire.keys()) {
-      const modelName = value.match(/\.\/(?<key>[\da-z]+)\./i).groups.key
-      models[modelName] = modelsRequire(value)
+  async init() {
+    const clientId = this.core.config.twitchClientId
+    if (isEmpty(clientId)) {
+      throw new Error(`Config entry twitchClientId is ${clientId}`)
     }
-    return models
+    const clientSecret = this.core.config.twitchClientSecret
+    if (isEmpty(clientSecret)) {
+      throw new Error(`Config entry twitchClientSecret is ${clientSecret}`)
+    }
+    debugger
+    this.twitchClient = twitch.withClientCredentials(clientId, clientSecret)
+  }
+
+  collectModels = {
+    ApiKey: require("./models/ApiKey"),
+    TwitchToken: require("./models/TwitchToken"),
+    TwitchUser: require("./models/TwitchUser"),
   }
 
   /**
@@ -46,8 +55,8 @@ class TwitchAuth {
    * @return {Promise<ProcessLoginResult>}
    */
   async processLogin(code) {
-    const {accessToken, refreshToken} = await twitch.getAccessToken(config.twitchClientId, config.twitchClientSecret, code, config.twitchClientCallbackUrl)
-    const tokenInfo = await twitch.getTokenInfo(config.twitchClientId, accessToken)
+    const {accessToken, refreshToken} = await twitch.getAccessToken(this.core.config.twitchClientId, this.core.config.twitchClientSecret, code, this.core.config.twitchClientCallbackUrl)
+    const tokenInfo = await twitch.getTokenInfo(this.core.config.twitchClientId, accessToken)
     if (!tokenInfo.valid) {
       throw new Error(`Token for user ${tokenInfo.userName} (ID ${tokenInfo.userId}) is invalid for some reason`)
     }
@@ -72,7 +81,7 @@ class TwitchAuth {
       },
     })
     if (twitchToken.isExpired() && twitchToken.refreshToken) {
-      const newToken = await twitch.refreshAccessToken(config.twitchClientId, config.twitchClientSecret, twitchToken.refreshToken)
+      const newToken = await twitch.refreshAccessToken(this.core.config.twitchClientId, this.core.config.twitchClientSecret, twitchToken.refreshToken)
       await twitchToken.update({
         accessToken: newToken.accessToken,
         refreshToken: newToken.refreshToken,
@@ -106,8 +115,8 @@ class TwitchAuth {
       pathname: "oauth2/authorize",
       query: {
         state,
-        client_id: config.twitchClientId,
-        redirect_uri: config.twitchClientCallbackUrl,
+        client_id: this.core.config.twitchClientId,
+        redirect_uri: this.core.config.twitchClientCallbackUrl,
         scope: this.options.scope.join(" "),
         response_type: "code",
       },
