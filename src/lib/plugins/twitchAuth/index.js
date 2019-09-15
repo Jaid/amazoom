@@ -2,15 +2,24 @@ import url from "url"
 
 import {config, logger} from "src/core"
 import twitch from "twitch"
+import ensureArray from "ensure-array"
 
 import TwitchUser from "./models/TwitchUser"
-import scope from "./scope"
 import TwitchToken from "./models/TwitchToken"
 import ApiKey from "./models/ApiKey"
 
 class TwitchAuth {
 
-  async init() {
+  constructor(options) {
+    this.options = {
+      scope: [],
+      ...options,
+    }
+    this.options.scope = ensureArray(this.options.scope)
+  }
+
+  async init(core) {
+    debugger
     this.twitchClient = twitch.withClientCredentials(config.twitchClientId, config.twitchClientSecret)
   }
 
@@ -99,7 +108,7 @@ class TwitchAuth {
         state,
         client_id: config.twitchClientId,
         redirect_uri: config.twitchClientCallbackUrl,
-        scope: scope.join(" "),
+        scope: this.options.scope.join(" "),
         response_type: "code",
       },
     })
