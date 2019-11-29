@@ -1,6 +1,5 @@
 {
   "title": "Amazoom",
-  "private": true,
   "webpackConfigJaid": "cli",
   "version": "1.5.0",
   "author": "Jaid <jaid.jsx@gmail.com> (https://github.com/Jaid)",
@@ -59,5 +58,6 @@
     "test:coverage": "npm run test:dev -- --coverage --json --outputFile=dist/jest/stats.json",
     "test:dev": "npm run build:dev && NODE_ENV=test MAIN=$(npx find-by-extension-cli js --fullPath --cwd dist/package/development) jest --runInBand",
     "test:debug": "npm run start"
-  }
+  },
+  "name": "amazoom"
 }
