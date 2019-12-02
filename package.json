@@ -60,5 +60,6 @@
     "test:debug": "npm run start",
     "prepareActionJest": "npm run build:prod"
   },
-  "name": "amazoom"
+  "name": "amazoom",
+  "description": "Collects data from Amazon."
 }
