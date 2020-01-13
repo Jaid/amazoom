@@ -61,5 +61,6 @@
     "prepareActionJest": "npm run build:prod"
   },
   "name": "amazoom",
-  "description": "Collects data from Amazon."
+  "description": "Collects data from Amazon.",
+  "funding": "https://github.com/sponsors/jaid"
 }
