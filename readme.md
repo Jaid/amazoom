@@ -1,9 +1,9 @@
 # Amazoom
 
 
-<a href="https://raw.githubusercontent.com/Jaid/amazoom/master/license.txt"><img src="https://img.shields.io/github/license/Jaid/amazoom?style=flat-square" alt="License"/></a>  
-<a href="https://actions-badge.atrox.dev/Jaid/amazoom/goto"><img src="https://img.shields.io/endpoint.svg?style=flat-square&url=https%3A%2F%2Factions-badge.atrox.dev%2FJaid%2Famazoom%2Fbadge" alt="Build status"/></a> <a href="https://github.com/Jaid/amazoom/commits"><img src="https://img.shields.io/github/commits-since/Jaid/amazoom/v1.5.0?style=flat-square&logo=github" alt="Commits since v1.5.0"/></a> <a href="https://github.com/Jaid/amazoom/commits"><img src="https://img.shields.io/github/last-commit/Jaid/amazoom?style=flat-square&logo=github" alt="Last commit"/></a> <a href="https://github.com/Jaid/amazoom/issues"><img src="https://img.shields.io/github/issues/Jaid/amazoom?style=flat-square&logo=github" alt="Issues"/></a>  
-<a href="https://npmjs.com/package/amazoom"><img src="https://img.shields.io/npm/v/amazoom?style=flat-square&logo=npm&label=latest%20version" alt="Latest version on npm"/></a> <a href="https://github.com/Jaid/amazoom/network/dependents"><img src="https://img.shields.io/librariesio/dependents/npm/amazoom?style=flat-square&logo=npm" alt="Dependents"/></a> <a href="https://npmjs.com/package/amazoom"><img src="https://img.shields.io/npm/dm/amazoom?style=flat-square&logo=npm" alt="Downloads"/></a>
+<a href="https://raw.githubusercontent.com/jaid/amazoom/master/license.txt"><img src="https://img.shields.io/github/license/jaid/amazoom?style=flat-square" alt="License"/></a> <a href="https://github.com/sponsors/jaid"><img src="https://img.shields.io/badge/<3-Sponsor-FF45F1?style=flat-square" alt="Sponsor amazoom"/></a>
+<a href="https://actions-badge.atrox.dev/jaid/amazoom/goto"><img src="https://img.shields.io/endpoint.svg?style=flat-square&url=https%3A%2F%2Factions-badge.atrox.dev%2Fjaid%2Famazoom%2Fbadge" alt="Build status"/></a> <a href="https://github.com/jaid/amazoom/commits"><img src="https://img.shields.io/github/commits-since/jaid/amazoom/v1.5.0?style=flat-square&logo=github" alt="Commits since v1.5.0"/></a> <a href="https://github.com/jaid/amazoom/commits"><img src="https://img.shields.io/github/last-commit/jaid/amazoom?style=flat-square&logo=github" alt="Last commit"/></a> <a href="https://github.com/jaid/amazoom/issues"><img src="https://img.shields.io/github/issues/jaid/amazoom?style=flat-square&logo=github" alt="Issues"/></a>  
+<a href="https://npmjs.com/package/amazoom"><img src="https://img.shields.io/npm/v/amazoom?style=flat-square&logo=npm&label=latest%20version" alt="Latest version on npm"/></a> <a href="https://github.com/jaid/amazoom/network/dependents"><img src="https://img.shields.io/librariesio/dependents/npm/amazoom?style=flat-square&logo=npm" alt="Dependents"/></a> <a href="https://npmjs.com/package/amazoom"><img src="https://img.shields.io/npm/dm/amazoom?style=flat-square&logo=npm" alt="Downloads"/></a>
 
 **Collects data from Amazon.**
 
@@ -33,7 +33,6 @@ yarn global add amazoom@^1.5.0
 
 
 
-
 ## CLI Usage
 After installing package `amazoom` globally, you can use its command line interface.
 ```bash
@@ -53,7 +52,7 @@ amazoom --help
 
 Setting up:
 ```bash
-git clone git@github.com:Jaid/amazoom.git
+git clone git@github.com:jaid/amazoom.git
 cd amazoom
 npm install
 ```
