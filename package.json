@@ -11,7 +11,7 @@
     "essential-config": "^4.0.2",
     "express": "^4.17.1",
     "fast-koa-router": "^1.2.0",
-    "got": "^10.7.0",
+    "got": "^11.8.5",
     "has-content": "^1.1.1",
     "html-minifier": "^4.0.0",
     "interval-promise": "^1.4.0",
